@@ -1,0 +1,139 @@
+Cmp-Mod V01 Created by PcbNew   date = 9/5/2016 1:21:44 AM
+
+BeginCmp
+TimeStamp = 57CC9B6F
+Path = /57CC72B6
+Reference = BAT1;
+ValeurCmp = Keystone_2468_2xAAA;
+IdModule  = Keystone_2468_no_mnt_holes;
+EndCmp
+
+BeginCmp
+TimeStamp = 57CC9B7B
+Path = /57CC9101
+Reference = C1;
+ValeurCmp = 10uF 10V;
+IdModule  = Capacitors_SMD:C_1206_HandSoldering;
+EndCmp
+
+BeginCmp
+TimeStamp = 57CC9B87
+Path = /57CC8932
+Reference = C2;
+ValeurCmp = 1.8nF;
+IdModule  = Capacitors_SMD:C_0805_HandSoldering;
+EndCmp
+
+BeginCmp
+TimeStamp = 57CC9B96
+Path = /57CCAD3C
+Reference = D1;
+ValeurCmp = Orange LED;
+IdModule  = nightmechanic_pcb:SMD_MiniLED;
+EndCmp
+
+BeginCmp
+TimeStamp = 57CC9BF2
+Path = /57CC9871
+Reference = P1;
+ValeurCmp = CONN_01X02;
+IdModule  = Wire_Connections_Bridges:WireConnection_1.20mmDrill;
+EndCmp
+
+BeginCmp
+TimeStamp = 57CC9C0B
+Path = /57CCB827
+Reference = P3;
+ValeurCmp = CONN_01X04;
+IdModule  = Pin_Headers:Pin_Header_Straight_1x04;
+EndCmp
+
+BeginCmp
+TimeStamp = 57CC9C1B
+Path = /57CC8172
+Reference = Q1;
+ValeurCmp = Si2312CDS;
+IdModule  = TO_SOT_Packages_SMD:SOT-23;
+EndCmp
+
+BeginCmp
+TimeStamp = 57CC9C2B
+Path = /57CC8CCD
+Reference = Q2;
+ValeurCmp = Q_NPN_BEC;
+IdModule  = TO_SOT_Packages_SMD:SOT-23;
+EndCmp
+
+BeginCmp
+TimeStamp = 57CC9C37
+Path = /57CC8C7B
+Reference = R1;
+ValeurCmp = 1k;
+IdModule  = Resistors_SMD:R_0805_HandSoldering;
+EndCmp
+
+BeginCmp
+TimeStamp = 57CC9C43
+Path = /57CC8B01
+Reference = R2;
+ValeurCmp = 1k;
+IdModule  = Resistors_SMD:R_0805_HandSoldering;
+EndCmp
+
+BeginCmp
+TimeStamp = 57CC9C4F
+Path = /57CC8C45
+Reference = R3;
+ValeurCmp = 1k;
+IdModule  = Resistors_SMD:R_0805_HandSoldering;
+EndCmp
+
+BeginCmp
+TimeStamp = 57CC9C5B
+Path = /57CCAF8D
+Reference = R4;
+ValeurCmp = 330R;
+IdModule  = Resistors_SMD:R_0805_HandSoldering;
+EndCmp
+
+BeginCmp
+TimeStamp = 57CC9C67
+Path = /57CC88ED
+Reference = R5;
+ValeurCmp = 47k;
+IdModule  = Resistors_SMD:R_0805_HandSoldering;
+EndCmp
+
+BeginCmp
+TimeStamp = 57CC9C76
+Path = /57CC94CA
+Reference = RV1;
+ValeurCmp = 3.3k POT;
+IdModule  = nightmechanic_pcb:Bourns_TC33X_2;
+EndCmp
+
+BeginCmp
+TimeStamp = 57CC9C95
+Path = /57CC7D12
+Reference = SW1;
+ValeurCmp = SPDT_SLIDE;
+IdModule  = nightmechanic_pcb:ALPS_SSSS810701;
+EndCmp
+
+BeginCmp
+TimeStamp = 57CC9CAA
+Path = /57CC863E
+Reference = U1;
+ValeurCmp = MSP430G2230ID;
+IdModule  = nightmechanic_pcb:TI-D-SOIC-8;
+EndCmp
+
+BeginCmp
+TimeStamp = 57CC9BF8
+Path = /57CCB3C4
+Reference = P2;
+ValeurCmp = CONN_01X01;
+IdModule  = Measurement_Points:Measurement_Point_Round-SMD-Pad_Small;
+EndCmp
+
+EndListe
