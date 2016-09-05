@@ -1,32 +1,8 @@
-** Drc report for E:\GitHub\Cricket\HW\Cricket.kicad_pcb **
+** Drc report for E:/GitHub/Cricket/HW/Cricket.kicad_pcb **
 ** Created on  **
 
 ** Found 0 DRC errors **
 
-** Found 8 unconnected pads **
-ErrType(2): Unconnected pads
-    @ (171.800 mm,110.060 mm): Pad 2 on F.Cu, B.Cu, Internal, Non-copper of P1 net V_Batt
-    @ (154.395 mm,108.800 mm): Pad 1 on F.Cu, Non-copper of U1
-ErrType(2): Unconnected pads
-    @ (167.900 mm,115.200 mm): Pad 1 on F.Cu, Non-copper of C1 net V_Batt
-    @ (171.800 mm,110.060 mm): Pad 2 on F.Cu, B.Cu, Internal, Non-copper of P1
-ErrType(2): Unconnected pads
-    @ (166.000 mm,106.850 mm): Pad 1 on F.Cu, Non-copper of R1 net GND
-    @ (162.900 mm,100.150 mm): Pad 2 on F.Cu, Non-copper of C2
-ErrType(2): Unconnected pads
-    @ (169.599 mm,106.050 mm): Pad 2 on F.Cu, Non-copper of Q2 net GND
-    @ (166.000 mm,106.850 mm): Pad 1 on F.Cu, Non-copper of R1
-ErrType(2): Unconnected pads
-    @ (154.395 mm,103.600 mm): Pad 8 on F.Cu, Non-copper of U1 net GND
-    @ (153.701 mm,97.750 mm): Pad 2 on F.Cu, Non-copper of Q1
-ErrType(2): Unconnected pads
-    @ (153.701 mm,97.750 mm): Pad 2 on F.Cu, Non-copper of Q1 net GND
-    @ (162.900 mm,100.150 mm): Pad 2 on F.Cu, Non-copper of C2
-ErrType(2): Unconnected pads
-    @ (162.900 mm,100.150 mm): Pad 2 on F.Cu, Non-copper of C2 net GND
-    @ (164.820 mm,94.400 mm): Pad 4 on F.Cu, B.Cu, Internal, Non-copper of P3
-ErrType(2): Unconnected pads
-    @ (167.900 mm,111.200 mm): Pad 2 on F.Cu, Non-copper of C1 net GND
-    @ (166.000 mm,106.850 mm): Pad 1 on F.Cu, Non-copper of R1
+** Found 0 unconnected pads **
 
 ** End of Report **
