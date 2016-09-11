@@ -23,6 +23,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
+//main consts:
 const unsigned int PLAY_CYCLE = 	500; //in 1 MHz cycles
 const unsigned int PLAY_DC = 		250; //in 1MHz cycles
 const unsigned int PLAY_PERIOD = 	10;  //in play cycles
@@ -43,4 +44,18 @@ typedef enum {
 	EXITSLEEP,
 	LOW_BAT
 } program_state;
+
+//battery measurement:
+const unsigned int ADCx4_1v5_2v8V  =	3822; //measure_Vbat result when ref=1.5 and vbat = 2.8
+const unsigned int ADCx4_1v5_1v0V = 	2731;
+const unsigned int ADCx4_1v5_0v1V =		273;
+const unsigned int ADCx4_2v5_1v0V = 	1638;
+const unsigned int ADCx4_2v5_0v1V =		164;
+
+const unsigned int LED_on_time =		20;  //in 50msec units
+const unsigned int LED_off_time =		13;  //in 50msec units
+const unsigned int LED_gap_time =		20;  //in 50msec units
+
+void display_Vbat(void);
+void ACLK_50m_sleep(unsigned int sleep_time);
 

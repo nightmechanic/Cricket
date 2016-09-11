@@ -29,16 +29,18 @@ THE SOFTWARE.
 #include "rand.h"
 #include "utils.h"
 
+unsigned int VLO_50m, max_VLO_50m, max_VLO;
+
 /*
  * main.c
  */
 int main(void) {
 	unsigned int prand_state;
-	unsigned int VLO_count, VLO_50m, max_VLO_50m, max_VLO, wait_time;
+	unsigned int VLO_count, wait_time;
 	unsigned int play_counter = 0;
 	unsigned int loop_counter = 0;
 	unsigned int outer_loop_counter = 0;
-	unsigned int Vbat = 0;
+//	unsigned int Vbat = 0;
 
 	program_state prog_state = INIT;
 
@@ -46,8 +48,8 @@ int main(void) {
 
 	// Initialization
 	P1REN = 0x1B;                             // Terminate unavailable Port1 pins (P1.0/1/3/4) properly
-	P1DIR |= BIT2;                            // P1.2 output
-	P1OUT &= ~BIT2;							// P1.2 output 0
+	P1DIR |= (BIT7 | BIT2);                            // P1.2 output
+	P1OUT &= ~(BIT7 | BIT2);							// P1.2 output 0
 	// clocks
 	 BCSCTL3 |= LFXT1S_2;                      // Select VLO as low freq clock
 
@@ -63,10 +65,13 @@ int main(void) {
 	VLO_50m = (unsigned int)50000 / VLO_count;  	//number of VLO cycles in a 50msec period
 	max_VLO_50m = (unsigned int)65000 / VLO_50m;	//longest time TA can count
 	max_VLO = max_VLO_50m * VLO_50m;
-    // generating the random seed
+
+	// generate the random seed
 	prand_state = rand();
 
-	prog_state = START_PLAYING;
+	display_Vbat();
+
+	prog_state = GOTOSLEEP;
 	while(1)		//Yes, finally the main loop...
 	{
 
@@ -124,20 +129,7 @@ int main(void) {
 			TACTL = 0x0;
 			P1SEL &= ~BIT2;                            // P1.2 back to output (0)
 			wait_time = IDLE_TIME;
-
-			while (wait_time > 0){
-				if (wait_time >= max_VLO_50m){
-					TA0CCR0 = max_VLO;
-					wait_time = wait_time - max_VLO_50m;
-				} else {
-					TA0CCR0 = (wait_time * VLO_50m) ;
-					wait_time = 0;
-				}
-				TA0CCTL0 = CCIE;
-				TA0CTL = TACLR;
-				TA0CTL = TASSEL_1 | MC_1;                 // ACLK, up mode
-				__bis_SR_register(LPM3_bits + GIE);       // Enter LPM3 w/ interrupt
-			}
+			ACLK_50m_sleep(wait_time);
 			TACTL = 0x0;
 			prog_state = START_PLAYING;
 			break;
@@ -148,19 +140,7 @@ int main(void) {
 			prand_state = prand(prand_state);
 			wait_time = prand_state >> BITS_PRAND;
 			wait_time = (wait_time << 2) + MIN_SLEEP;
-			while (wait_time > 0){
-				if (wait_time >= max_VLO_50m){
-					TA0CCR0 = max_VLO;
-					wait_time = wait_time - max_VLO_50m;
-				} else {
-					TA0CCR0 = (wait_time * VLO_50m) ;
-					wait_time = 0;
-				}
-				TA0CCTL0 = CCIE;
-				TA0CTL = TACLR;
-				TA0CTL = TASSEL_1 | MC_1;                 // ACLK, up mode
-				__bis_SR_register(LPM3_bits + GIE);       // Enter LPM3 w/ interrupt
-			}
+			ACLK_50m_sleep(wait_time);
 			//Done sleeping
 			TACTL = 0x0;
 			prog_state = EXITSLEEP;
@@ -168,11 +148,12 @@ int main(void) {
 
 		case EXITSLEEP:
 			// measure VBAT
-			Vbat = measure_Vbat(0);
-			if (Vbat < 3056){
-				prog_state = LOW_BAT;
-				break;
-			}
+//			Vbat = measure_Vbat(0);
+//			if (Vbat < 3056){
+//				prog_state = LOW_BAT;
+//				break;
+//			}
+
 			// recal VLO
 			VLO_count = calibrate_VLO();
 			VLO_50m = (unsigned int)50000 / VLO_count;  	//number of VLO cycles in a 50msec period
@@ -195,6 +176,73 @@ int main(void) {
 
 }
 
+void display_Vbat(void){
+	unsigned int Vbat;
+	unsigned int Vref = 0;
+	unsigned int Vbat_1V, Vbat_0v1V;
+	unsigned char V_int = 0;
+	unsigned char V_frac = 0;
+
+	Vbat = measure_Vbat(Vref);
+	Vbat_1V = ADCx4_1v5_1v0V;
+	Vbat_0v1V =  ADCx4_1v5_0v1V;
+
+	if (Vbat >  ADCx4_1v5_2v8V) {
+		Vref=1;
+		Vbat = measure_Vbat(Vref);
+		Vbat_1V = ADCx4_2v5_1v0V;
+		Vbat_0v1V =  ADCx4_2v5_0v1V;
+	}
+
+	Vbat = 2 * Vbat;
+
+	V_int = (unsigned char)(Vbat / Vbat_1V) ;
+
+	Vbat = Vbat - (V_int * Vbat_1V);
+	if (Vbat > 0) {
+		Vbat = Vbat + (Vbat_0v1V >> 2); // for more accurate rounding
+		V_frac = (unsigned char)(Vbat / Vbat_0v1V) ;
+	}
+
+	while (V_int > 0){
+		P1OUT |= BIT7;		// led on
+		ACLK_50m_sleep(LED_on_time);
+		P1OUT &= ~BIT7;		//led off
+		ACLK_50m_sleep(LED_off_time);
+		V_int--;
+	}
+
+	ACLK_50m_sleep(LED_off_time); //gap between integer and fractional blonks
+
+	while (V_frac > 0){
+			P1OUT |= BIT7;		// led on
+			ACLK_50m_sleep(LED_on_time);
+			P1OUT &= ~BIT7;		//led off
+			ACLK_50m_sleep(LED_off_time);
+			V_frac--;
+		}
+	return;
+}
+
+void ACLK_50m_sleep(unsigned int sleep_time){
+	//halt timer
+	TACTL = 0x0;
+	while (sleep_time > 0){
+		if (sleep_time >= max_VLO_50m){
+			TA0CCR0 = max_VLO;
+			sleep_time =sleep_time - max_VLO_50m;
+		} else {
+			TA0CCR0 = (sleep_time * VLO_50m) ;
+			sleep_time = 0;
+		}
+		TA0CCTL0 = CCIE;
+		TA0CTL = TACLR;
+		TA0CTL = TASSEL_1 | MC_1;                 // ACLK, up mode
+		__bis_SR_register(LPM3_bits + GIE);       // Enter LPM3 w/ interrupt
+	}
+
+	return;
+}
 // Timer A0 interrupt service routine
 
 #pragma vector=TIMERA0_VECTOR
