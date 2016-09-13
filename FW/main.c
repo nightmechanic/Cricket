@@ -200,8 +200,12 @@ void display_Vbat(void){
 
 	Vbat = Vbat - (V_int * Vbat_1V);
 	if (Vbat > 0) {
-		Vbat = Vbat + (Vbat_0v1V >> 2); // for more accurate rounding
-		V_frac = (unsigned char)(Vbat / Vbat_0v1V) ;
+		Vbat = Vbat + (Vbat_0v1V >> 1); // for more accurate rounding
+		V_frac = (unsigned char)(Vbat / Vbat_0v1V);
+		if (V_frac >= 10){
+			V_frac = 0;
+			V_int = V_int + 1;
+		}
 	}
 
 	while (V_int > 0){
