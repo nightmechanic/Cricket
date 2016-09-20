@@ -126,23 +126,23 @@ int main(void) {
 			break;
 
 		case IDLE:
-			TACTL = 0x0;
+			TA0CTL = 0x0;
 			P1SEL &= ~BIT2;                            // P1.2 back to output (0)
 			wait_time = IDLE_TIME;
 			ACLK_50m_sleep(wait_time);
-			TACTL = 0x0;
+			TA0CTL = 0x0;
 			prog_state = START_PLAYING;
 			break;
 
 		case GOTOSLEEP:
-			TACTL = 0x0;
+			TA0CTL = 0x0;
 			P1SEL &= ~BIT2;                            // P1.2 back to output (0)
 			prand_state = prand(prand_state);
 			wait_time = prand_state >> BITS_PRAND;
 			wait_time = (wait_time << 2) + MIN_SLEEP;
 			ACLK_50m_sleep(wait_time);
 			//Done sleeping
-			TACTL = 0x0;
+			TA0CTL = 0x0;
 			prog_state = EXITSLEEP;
 			break;
 
@@ -230,7 +230,7 @@ void display_Vbat(void){
 
 void ACLK_50m_sleep(unsigned int sleep_time){
 	//halt timer
-	TACTL = 0x0;
+	TA0CTL = 0x0;
 	while (sleep_time > 0){
 		if (sleep_time >= max_VLO_50m){
 			TA0CCR0 = max_VLO;

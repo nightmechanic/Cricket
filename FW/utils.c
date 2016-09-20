@@ -37,26 +37,26 @@ unsigned int calibrate_VLO(void)
 	BCSCTL1 |= DIVA_3;						// divide VLO by 8
 
 	/* Halt timer */
-	TACTL = 0x0;
+	TA0CTL = 0x0;
 
 	/* Set up timer */
-	TACCTL0 = CAP | CM_1 | CCIS_1 | CCIE;            // Capture mode, positive edge
-	TACTL = TASSEL_2 | MC_2;                  // SMCLK, continuous up
+	TA0CCTL0 = CAP | CM_1 | CCIS_1 | CCIE;            // Capture mode, positive edge
+	TA0CTL = TASSEL_2 | MC_2;                  // SMCLK, continuous up
 
 	for (j = 8; j > 0; j--) {
 
 		__bis_SR_register(LPM0_bits + GIE);  // Wait for interrupt
 
 		if (cap_cnt1 == 0) {
-			cap_cnt1 = TACCR0;
+			cap_cnt1 = TA0CCR0;
 		} else {
-			cap_cnt2 = TACCR0;
+			cap_cnt2 = TA0CCR0;
 			count += (cap_cnt2-cap_cnt1);
 			cap_cnt1 = 0;
 		}
 	}
 
-	TACTL = 0x0;
+	TA0CTL = 0x0;
 	BCSCTL1 = BCSCTL1_old;
 	if ((count & 0x003F) > 0x20){
 		count >>= 6;
@@ -85,7 +85,7 @@ unsigned int measure_Vbat(unsigned char ADC_REF_2_5V)
 	TA0CTL = TACLR;
 	TA0CTL = TASSEL_2 | MC_1;                 // TACLK = SMCLK, Up mode.
 	__bis_SR_register(LPM0_bits + GIE); 		 // Wait for interrupt (ref to settle)
-	TACTL = 0;
+	TA0CTL = 0;
 
 	for (j = 4; j > 0; j--) {
 		ADC10CTL0 |= ENC | ADC10SC;

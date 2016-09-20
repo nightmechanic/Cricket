@@ -54,16 +54,16 @@ unsigned int rand(void) {
 
 	/* Save state */
 	unsigned int BCSCTL3_old = BCSCTL3;
-	unsigned int TACCTL0_old = TACCTL0;
-	unsigned int TACTL_old = TACTL;
+	unsigned int TACCTL0_old = TA0CCTL0;
+	unsigned int TACTL_old = TA0CTL;
 
 	/* Halt timer */
-	TACTL = 0x0;
+	TA0CTL = 0x0;
 
 	/* Set up timer */
 	BCSCTL3 = (~LFXT1S_3 & BCSCTL3) | LFXT1S_2; // Source ACLK from VLO
-	TACCTL0 = CAP | CM_1 | CCIS_1 | CCIE;            // Capture mode, positive edge
-	TACTL = TASSEL_2 | MC_2;                  // SMCLK, continuous up
+	TA0CCTL0 = CAP | CM_1 | CCIS_1 | CCIE;            // Capture mode, positive edge
+	TA0CTL = TASSEL_2 | MC_2;                  // SMCLK, continuous up
 
 	/* Generate bits */
 	for (i = 16; i > 0; i--) {
@@ -73,7 +73,7 @@ unsigned int rand(void) {
 
 			__bis_SR_register(LPM0_bits + GIE);  // Wait for interrupt
 
-			if (1 & TACCR0)                   // If LSb set, count it
+			if (1 & TA0CCR0)                   // If LSb set, count it
 				ones++;
 		}
 
@@ -85,8 +85,8 @@ unsigned int rand(void) {
 
 	/* Restore state */
 	BCSCTL3 = BCSCTL3_old;
-	TACCTL0 = TACCTL0_old;
-	TACTL = TACTL_old;
+	TA0CCTL0 = TACCTL0_old;
+	TA0CTL = TACTL_old;
 
 	return result;
 }
