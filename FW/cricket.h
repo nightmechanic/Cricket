@@ -23,6 +23,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
+//#include <msp430.h>
+
+
 //main consts:
 const unsigned int PLAY_CYCLE = 	500; //in 1 MHz cycles
 const unsigned int PLAY_DC = 		250; //in 1MHz cycles
@@ -52,9 +55,20 @@ const unsigned int ADCx4_1v5_0v1V =		273;
 const unsigned int ADCx4_2v5_1v0V = 	1638;
 const unsigned int ADCx4_2v5_0v1V =		164;
 
-const unsigned int LED_on_time =		20;  //in 50msec units
-const unsigned int LED_off_time =		13;  //in 50msec units
+const unsigned int LED_on_time =		10;  //in 50msec units
+const unsigned int LED_off_time =		10;  //in 50msec units
 const unsigned int LED_gap_time =		20;  //in 50msec units
+
+
+//HW platform:
+
+#if defined (__MSP430G2230__)	//cricket board
+#define PWM_PIN BIT2
+#define LED_PIN BIT7
+#elif defined (__MSP430G2553__) //lauchpad
+#define PWM_PIN BIT2
+#define LED_PIN BIT6
+#endif	//cricket vs. launchpad
 
 void display_Vbat(void);
 void ACLK_50m_sleep(unsigned int sleep_time);

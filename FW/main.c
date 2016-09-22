@@ -48,8 +48,11 @@ int main(void) {
 
 	// Initialization
 	P1REN = 0x1B;                             // Terminate unavailable Port1 pins (P1.0/1/3/4) properly
-	P1DIR |= (BIT7 | BIT2);                            // P1.2 output
-	P1OUT &= ~(BIT7 | BIT2);							// P1.2 output 0
+
+	P1DIR |= (LED_PIN | PWM_PIN);                            // Set functional pins as output output
+	P1OUT &= ~(LED_PIN | PWM_PIN);							// Set functional pins to be 0
+
+
 	// clocks
 	 BCSCTL3 |= LFXT1S_2;                      // Select VLO as low freq clock
 
@@ -79,7 +82,7 @@ int main(void) {
 		{
 		case START_PLAYING:
 			play_counter = 0;
-			P1SEL |= BIT2;                            // P1.2 TA1 options
+			P1SEL |= PWM_PIN;                            // P1.2 TA1 options
 			TA0CCR0 = PLAY_CYCLE-1;                   // PWM Period/2
 			TA0CCTL0 = CCIE;						// enable interrupt
 			TA0CCTL1 = OUTMOD_3;                      // TA0CCR1 set/reset
@@ -127,7 +130,7 @@ int main(void) {
 
 		case IDLE:
 			TA0CTL = 0x0;
-			P1SEL &= ~BIT2;                            // P1.2 back to output (0)
+			P1SEL &= ~PWM_PIN;                            // P1.2 back to output (0)
 			wait_time = IDLE_TIME;
 			ACLK_50m_sleep(wait_time);
 			TA0CTL = 0x0;
@@ -136,7 +139,7 @@ int main(void) {
 
 		case GOTOSLEEP:
 			TA0CTL = 0x0;
-			P1SEL &= ~BIT2;                            // P1.2 back to output (0)
+			P1SEL &= ~PWM_PIN;                            // P1.2 back to output (0)
 			prand_state = prand(prand_state);
 			wait_time = prand_state >> BITS_PRAND;
 			wait_time = (wait_time << 2) + MIN_SLEEP;
@@ -209,9 +212,9 @@ void display_Vbat(void){
 	}
 
 	while (V_int > 0){
-		P1OUT |= BIT7;		// led on
+		P1OUT |= LED_PIN;		// led on
 		ACLK_50m_sleep(LED_on_time);
-		P1OUT &= ~BIT7;		//led off
+		P1OUT &= ~LED_PIN;		//led off
 		ACLK_50m_sleep(LED_off_time);
 		V_int--;
 	}
@@ -219,9 +222,9 @@ void display_Vbat(void){
 	ACLK_50m_sleep(LED_off_time); //gap between integer and fractional blonks
 
 	while (V_frac > 0){
-			P1OUT |= BIT7;		// led on
+			P1OUT |= LED_PIN;		// led on
 			ACLK_50m_sleep(LED_on_time);
-			P1OUT &= ~BIT7;		//led off
+			P1OUT &= ~LED_PIN;		//led off
 			ACLK_50m_sleep(LED_off_time);
 			V_frac--;
 		}
@@ -249,7 +252,8 @@ void ACLK_50m_sleep(unsigned int sleep_time){
 }
 // Timer A0 interrupt service routine
 
-#pragma vector=TIMERA0_VECTOR
+//#pragma vector=TIMERA0_VECTOR
+#pragma vector=TIMER0_A0_VECTOR
 __interrupt void Timer_A_ISR (void)
 {
 	 __bic_SR_register_on_exit(LPM3_bits);                   // Clear LPM3 bits from 0(SR)

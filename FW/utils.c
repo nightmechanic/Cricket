@@ -32,6 +32,7 @@ unsigned int calibrate_VLO(void)
 	unsigned int cap_cnt1 = 0;                           // First capture counter
 	unsigned int cap_cnt2 = 0;                           // Second capture counter
 	unsigned int BCSCTL1_old = BCSCTL1;
+	unsigned int phase = 0;
 
 
 	BCSCTL1 |= DIVA_3;						// divide VLO by 8
@@ -43,18 +44,21 @@ unsigned int calibrate_VLO(void)
 	TA0CCTL0 = CAP | CM_1 | CCIS_1 | CCIE;            // Capture mode, positive edge
 	TA0CTL = TASSEL_2 | MC_2;                  // SMCLK, continuous up
 
-	for (j = 8; j > 0; j--) {
+	for (j = 16; j > 0; j--) {
 
 		__bis_SR_register(LPM0_bits + GIE);  // Wait for interrupt
 
-		if (cap_cnt1 == 0) {
+		if (phase == 0) {
 			cap_cnt1 = TA0CCR0;
+			phase = 1;
 		} else {
 			cap_cnt2 = TA0CCR0;
 			count += (cap_cnt2-cap_cnt1);
-			cap_cnt1 = 0;
+			phase = 0;
 		}
 	}
+
+
 
 	TA0CTL = 0x0;
 	BCSCTL1 = BCSCTL1_old;
