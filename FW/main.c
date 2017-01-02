@@ -142,7 +142,7 @@ int main(void) {
 			P1SEL &= ~PWM_PIN;                            // P1.2 back to output (0)
 			prand_state = prand(prand_state);
 			wait_time = prand_state >> BITS_PRAND;
-			wait_time = (wait_time << 2) + MIN_SLEEP;
+			wait_time = (wait_time << 4) + MIN_SLEEP;
 			ACLK_50m_sleep(wait_time);
 			//Done sleeping
 			TA0CTL = 0x0;
@@ -212,14 +212,14 @@ void display_Vbat(void){
 	}
 
 	while (V_int > 0){
-		P1OUT |= LED_PIN;		// led on
+	    ACLK_50m_sleep(LED_off_time);
+	    P1OUT |= LED_PIN;		// led on
 		ACLK_50m_sleep(LED_on_time);
 		P1OUT &= ~LED_PIN;		//led off
-		ACLK_50m_sleep(LED_off_time);
 		V_int--;
 	}
 
-	ACLK_50m_sleep(LED_off_time); //gap between integer and fractional blonks
+	ACLK_50m_sleep(LED_gap_time); //gap between integer and fractional blonks
 
 	while (V_frac > 0){
 			P1OUT |= LED_PIN;		// led on
